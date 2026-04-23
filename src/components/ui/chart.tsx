@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
@@ -11,7 +10,7 @@ const THEMES = {
   dark: ".dark"
 }
 
-const ChartContext = React.createContext(null)
+const ChartContext = React.createContext<any>(null)
 
 function useChart() {
   const context = React.useContext(ChartContext)
@@ -23,7 +22,7 @@ function useChart() {
   return context
 }
 
-const ChartContainer = React.forwardRef(({ id, className, children, config, ...props }, ref) => {
+const ChartContainer = React.forwardRef<any, any>(({ id, className, children, config, ...props }, ref) => {
   const uniqueId = React.useId()
   const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`
 
@@ -36,7 +35,7 @@ const ChartContainer = React.forwardRef(({ id, className, children, config, ...p
           "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
           className
         )}
-        {...props}>
+        {...(props as any)}>
         <ChartStyle id={chartId} config={config} />
         <RechartsPrimitive.ResponsiveContainer>
           {children}
@@ -50,6 +49,9 @@ ChartContainer.displayName = "Chart"
 const ChartStyle = ({
   id,
   config
+}: {
+  id: string
+  config: Record<string, any>
 }) => {
   const colorConfig = Object.entries(config).filter(([, config]) => config.theme || config.color)
 
@@ -80,7 +82,7 @@ return color ? `  --color-${key}: ${color};` : null
 
 const ChartTooltip = RechartsPrimitive.Tooltip
 
-const ChartTooltipContent = React.forwardRef((
+const ChartTooltipContent = React.forwardRef<any, any>((
   {
     active,
     payload,
@@ -183,7 +185,7 @@ const ChartTooltipContent = React.forwardRef((
                           {
                             "--color-bg": indicatorColor,
                             "--color-border": indicatorColor
-                          }
+                          } as React.CSSProperties
                         } />
                     )
                   )}
@@ -217,7 +219,7 @@ ChartTooltipContent.displayName = "ChartTooltip"
 
 const ChartLegend = RechartsPrimitive.Legend
 
-const ChartLegendContent = React.forwardRef((
+const ChartLegendContent = React.forwardRef<any, any>((
   { className, hideIcon = false, payload, verticalAlign = "bottom", nameKey },
   ref
 ) => {
@@ -265,9 +267,9 @@ ChartLegendContent.displayName = "ChartLegend"
 
 // Helper to extract item config from a payload.
 function getPayloadConfigFromPayload(
-  config,
-  payload,
-  key
+  config: Record<string, any>,
+  payload: any,
+  key: string
 ) {
   if (typeof payload !== "object" || payload === null) {
     return undefined

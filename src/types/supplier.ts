@@ -1,5 +1,6 @@
 export interface Supplier {
   company_name: string;
+  category: string;
   tin: string;
   primary_contact_name: string;
   primary_contact_phone: string;

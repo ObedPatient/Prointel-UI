@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useMemo, useState, type FormEvent, type MouseEvent } from "react";
 import { Link } from "react-router-dom";
 import {

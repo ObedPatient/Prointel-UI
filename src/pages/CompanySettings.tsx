@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useMemo, useState } from "react";
 import { AlertCircle, Building2, CheckCircle2, Settings2, Siren, Wallet } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

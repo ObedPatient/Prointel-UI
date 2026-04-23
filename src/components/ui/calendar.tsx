@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker } from "react-day-picker"
@@ -58,13 +57,13 @@ function Calendar({
       }}
       components={{
         IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
+          <ChevronLeft className={cn("h-4 w-4", className)} {...(props as any)} />
         ),
         IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("h-4 w-4", className)} {...props} />
+          <ChevronRight className={cn("h-4 w-4", className)} {...(props as any)} />
         ),
       }}
-      {...props} />)
+      {...(props as any)} />)
   );
 }
 Calendar.displayName = "Calendar"

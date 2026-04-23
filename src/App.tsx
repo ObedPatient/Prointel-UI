@@ -5,6 +5,8 @@ import AppLayout from "./components/layout/AppLayout";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import PlaceholderPage from "./pages/PlaceholderPage";
+import PurchaseOrderDetails from "./pages/PurchaseOrderDetails";
+import SupplierDetails from "./pages/SupplierDetails";
 import TenantRegister from "./pages/TenantRegister";
 import { appRoutes } from "./routes/routes";
 
@@ -36,6 +38,8 @@ export default function App() {
           {appRoutes.map((route) => (
             <Route key={route.path} path={route.path.slice(1)} element={route.element} />
           ))}
+          <Route path="purchase-orders/:poNumber" element={<PurchaseOrderDetails />} />
+          <Route path="suppliers/:supplierId" element={<SupplierDetails />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

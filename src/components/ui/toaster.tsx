@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useToast } from "@/components/ui/use-toast";
 import {
   Toast,
@@ -16,7 +15,7 @@ export function Toaster() {
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, ...props }) {
         return (
-          <Toast key={id} {...props}>
+          <Toast key={id} {...(props as any)}>
             <div className="grid gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && (

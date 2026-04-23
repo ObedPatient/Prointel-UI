@@ -1,10 +1,19 @@
-// @ts-nocheck
-import { useMemo, useState } from "react";
-import { Plus, Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Eye, MoreHorizontal, Pencil, Plus, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import SupplierFormModal from "@/components/supplier/SupplierFormModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import DataPagination from "@/components/ui/data-pagination";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -13,64 +22,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  createSupplierRecord,
+  loadSuppliers,
+  saveSuppliers,
+} from "@/lib/suppliers";
 import type { Supplier, SupplierRecord } from "@/types/supplier";
 
-const INITIAL_SUPPLIERS: SupplierRecord[] = [
-  {
-    id: "supplier-001",
-    company_name: "Kigali Packaging Works",
-    tin: "107845239",
-    primary_contact_name: "Alice Uwimana",
-    primary_contact_phone: "+250 788 111 222",
-    payment_terms: "Net 30",
-    payment_days: 30,
-    average_lead_time_days: 7,
-    credit_limit: 2500000,
-    current_balance: 540000,
-    performance_rating: 91,
-    on_time_delivery_rate: 96,
-    quality_rejection_rate: 2,
-    status: "Active",
-    archived_at: null,
-    created_at: "2026-01-15T08:30:00.000Z",
-  },
-  {
-    id: "supplier-002",
-    company_name: "Great Lakes Fiber Ltd",
-    tin: "102334875",
-    primary_contact_name: "Samuel Ndayisaba",
-    primary_contact_phone: "+250 789 333 444",
-    payment_terms: "Net 45",
-    payment_days: 45,
-    average_lead_time_days: 12,
-    credit_limit: 4000000,
-    current_balance: 1280000,
-    performance_rating: 78,
-    on_time_delivery_rate: 88,
-    quality_rejection_rate: 5,
-    status: "Active",
-    archived_at: null,
-    created_at: "2025-11-04T10:15:00.000Z",
-  },
-  {
-    id: "supplier-003",
-    company_name: "Virunga Industrial Supplies",
-    tin: "109992144",
-    primary_contact_name: "Diane Mukamana",
-    primary_contact_phone: "+250 787 555 999",
-    payment_terms: "Cash on Delivery",
-    payment_days: 0,
-    average_lead_time_days: 4,
-    credit_limit: 800000,
-    current_balance: 0,
-    performance_rating: 84,
-    on_time_delivery_rate: 81,
-    quality_rejection_rate: 7,
-    status: "Inactive",
-    archived_at: null,
-    created_at: "2025-08-22T14:00:00.000Z",
-  },
-];
+const PAGE_SIZE = 8;
 
 function formatNumber(value: number | null): string {
   return value == null ? "—" : value.toLocaleString();
@@ -119,11 +86,17 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function Suppliers() {
-  const [suppliers, setSuppliers] = useState<SupplierRecord[]>(INITIAL_SUPPLIERS);
+  const navigate = useNavigate();
+  const [suppliers, setSuppliers] = useState<SupplierRecord[]>(() => loadSuppliers());
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Statuses");
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<SupplierRecord | null>(null);
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    saveSuppliers(suppliers);
+  }, [suppliers]);
 
   const filtered = useMemo(() => {
     const needle = search.trim().toLowerCase();
@@ -132,6 +105,7 @@ export default function Suppliers() {
       const matchesSearch =
         needle.length === 0 ||
         supplier.company_name.toLowerCase().includes(needle) ||
+        supplier.category.toLowerCase().includes(needle) ||
         supplier.tin.toLowerCase().includes(needle) ||
         supplier.primary_contact_name.toLowerCase().includes(needle) ||
         supplier.primary_contact_phone.toLowerCase().includes(needle);
@@ -142,6 +116,21 @@ export default function Suppliers() {
       return matchesSearch && matchesStatus;
     });
   }, [search, statusFilter, suppliers]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, statusFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+
+  useEffect(() => {
+    setPage((current) => Math.min(current, totalPages));
+  }, [totalPages]);
+
+  const paginatedSuppliers = useMemo(() => {
+    const startIndex = (page - 1) * PAGE_SIZE;
+    return filtered.slice(startIndex, startIndex + PAGE_SIZE);
+  }, [filtered, page]);
 
   const openCreateModal = () => {
     setEditing(null);
@@ -157,15 +146,12 @@ export default function Suppliers() {
     if (editing) {
       setSuppliers((current) =>
         current.map((supplier) =>
-          supplier.id === editing.id ? { ...supplier, ...payload } : supplier,
+          supplier.id === editing.id ? createSupplierRecord(editing.id, payload) : supplier,
         ),
       );
     } else {
       setSuppliers((current) => [
-        {
-          id: crypto.randomUUID(),
-          ...payload,
-        },
+        createSupplierRecord(crypto.randomUUID(), payload),
         ...current,
       ]);
     }
@@ -200,7 +186,7 @@ export default function Suppliers() {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search company, TIN, or contact..."
+            placeholder="Search company, category, TIN, or contact..."
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             className="w-72 pl-9"
@@ -226,98 +212,124 @@ export default function Suppliers() {
       </Card>
 
       <Card className="overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[1200px] text-sm">
-            <thead>
-              <tr className="border-b border-border bg-secondary/40">
-                {[
-                  "COMPANY",
-                  "TIN",
-                  "PRIMARY CONTACT",
-                  "TERMS",
-                  "PAYMENT DAYS",
-                  "LEAD TIME",
-                  "CREDIT LIMIT",
-                  "BALANCE",
-                  "PERFORMANCE",
-                  "ON-TIME",
-                  "REJECTION",
-                  "STATUS",
-                  "CREATED",
-                  "ARCHIVED",
-                ].map((heading) => (
-                  <th
-                    key={heading}
-                    className="px-4 py-3 text-left text-[11px] font-semibold tracking-wide text-muted-foreground"
-                  >
-                    {heading}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((supplier, index) => (
-                <tr
-                  key={supplier.id}
-                  className={`cursor-pointer border-b border-border transition-colors hover:bg-secondary/30 ${
-                    index % 2 === 1 ? "bg-secondary/10" : ""
-                  }`}
-                  onClick={() => openEditModal(supplier)}
+        <Table className="min-w-[1280px]">
+          <TableHeader>
+            <TableRow className="bg-secondary/40 hover:bg-secondary/40">
+              {[
+                "COMPANY",
+                "CATEGORY",
+                "TIN",
+                "PRIMARY CONTACT",
+                "TERMS",
+                "PAYMENT DAYS",
+                "LEAD TIME",
+                "CREDIT LIMIT",
+                "BALANCE",
+                "PERFORMANCE",
+                "ON-TIME",
+                "REJECTION",
+                "STATUS",
+                "CREATED",
+                "ARCHIVED",
+                "ACTIONS",
+              ].map((heading) => (
+                <TableHead
+                  key={heading}
+                  className="px-4 py-3 text-left text-[11px] font-semibold tracking-wide"
                 >
-                  <td className="px-4 py-3 font-medium text-foreground">
-                    {supplier.company_name}
-                  </td>
-                  <td className="px-4 py-3 text-foreground">{supplier.tin}</td>
-                  <td className="px-4 py-3">
-                    <p className="text-foreground">{supplier.primary_contact_name || "—"}</p>
-                    <p className="text-[11px] text-muted-foreground">
-                      {supplier.primary_contact_phone || "—"}
-                    </p>
-                  </td>
-                  <td className="px-4 py-3 text-foreground">{supplier.payment_terms || "—"}</td>
-                  <td className="px-4 py-3 text-foreground">
-                    {formatNumber(supplier.payment_days)}
-                  </td>
-                  <td className="px-4 py-3 text-foreground">
-                    {formatNumber(supplier.average_lead_time_days)}
-                  </td>
-                  <td className="px-4 py-3 text-foreground">
-                    {formatCurrency(supplier.credit_limit)}
-                  </td>
-                  <td className="px-4 py-3 text-foreground">
-                    {formatCurrency(supplier.current_balance)}
-                  </td>
-                  <td className="px-4 py-3">
-                    <PerformanceRating value={supplier.performance_rating} />
-                  </td>
-                  <td className="px-4 py-3 text-foreground">
-                    {formatPercent(supplier.on_time_delivery_rate)}
-                  </td>
-                  <td className="px-4 py-3 text-foreground">
-                    {formatPercent(supplier.quality_rejection_rate)}
-                  </td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={supplier.status} />
-                  </td>
-                  <td className="px-4 py-3 text-foreground">
-                    {formatDate(supplier.created_at)}
-                  </td>
-                  <td className="px-4 py-3 text-foreground">
-                    {formatDate(supplier.archived_at)}
-                  </td>
-                </tr>
+                  {heading}
+                </TableHead>
               ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {paginatedSuppliers.map((supplier, index) => (
+              <TableRow
+                key={supplier.id}
+                className={index % 2 === 1 ? "bg-secondary/10 hover:bg-secondary/30" : "hover:bg-secondary/30"}
+              >
+                <TableCell className="px-4 py-3 font-medium text-foreground">
+                  {supplier.company_name}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-foreground">{supplier.category || "—"}</TableCell>
+                <TableCell className="px-4 py-3 text-foreground">{supplier.tin}</TableCell>
+                <TableCell className="px-4 py-3">
+                  <p className="text-foreground">{supplier.primary_contact_name || "—"}</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {supplier.primary_contact_phone || "—"}
+                  </p>
+                </TableCell>
+                <TableCell className="px-4 py-3 text-foreground">{supplier.payment_terms || "—"}</TableCell>
+                <TableCell className="px-4 py-3 text-foreground">
+                  {formatNumber(supplier.payment_days)}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-foreground">
+                  {formatNumber(supplier.average_lead_time_days)}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-foreground">
+                  {formatCurrency(supplier.credit_limit)}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-foreground">
+                  {formatCurrency(supplier.current_balance)}
+                </TableCell>
+                <TableCell className="px-4 py-3">
+                  <PerformanceRating value={supplier.performance_rating} />
+                </TableCell>
+                <TableCell className="px-4 py-3 text-foreground">
+                  {formatPercent(supplier.on_time_delivery_rate)}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-foreground">
+                  {formatPercent(supplier.quality_rejection_rate)}
+                </TableCell>
+                <TableCell className="px-4 py-3">
+                  <StatusBadge status={supplier.status} />
+                </TableCell>
+                <TableCell className="px-4 py-3 text-foreground">
+                  {formatDate(supplier.created_at)}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-foreground">
+                  {formatDate(supplier.archived_at)}
+                </TableCell>
+                <TableCell className="px-4 py-3">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button type="button" variant="ghost" size="icon" aria-label="Open supplier actions">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-44">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => navigate(`/suppliers/${supplier.id}`)}>
+                        <Eye className="h-4 w-4" />
+                        View
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => openEditModal(supplier)}>
+                        <Pencil className="h-4 w-4" />
+                        Update
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
 
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={14} className="px-4 py-10 text-center text-sm text-muted-foreground">
-                    No suppliers found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+            {filtered.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={16} className="px-4 py-10 text-center text-sm text-muted-foreground">
+                  No suppliers found.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        <DataPagination
+          page={page}
+          pageSize={PAGE_SIZE}
+          totalItems={filtered.length}
+          itemLabel="suppliers"
+          onPageChange={setPage}
+        />
       </Card>
 
       {modalOpen && (

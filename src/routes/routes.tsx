@@ -19,6 +19,7 @@ import Dashboard from "../pages/Dashboard";
 import CompanySettings from "../pages/CompanySettings";
 import Landing from "../pages/Landing";
 import PlaceholderPage from "../pages/PlaceholderPage";
+import PurchaseOrdersPage from "../pages/PurchaseOrders";
 import SuppliersPage from "../pages/Suppliers";
 
 export interface AppRoute {
@@ -63,7 +64,7 @@ export const routeSections: RouteSection[] = [
         title: "Purchase Orders",
         path: "/purchase-orders",
         icon: FileText,
-        element: placeholderRoute("Purchase Orders"),
+        element: <PurchaseOrdersPage />,
       },
     ],
   },

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, LockKeyhole, Mail, ShieldCheck } from "lucide-react";

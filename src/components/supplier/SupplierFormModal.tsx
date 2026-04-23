@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState } from "react";
 import type { Supplier, SupplierRecord } from "@/types/supplier";
 import { Button } from "@/components/ui/button";
@@ -28,6 +27,7 @@ interface SupplierFormModalProps {
 
 interface SupplierFormState {
   company_name: string;
+  category: string;
   tin: string;
   primary_contact_name: string;
   primary_contact_phone: string;
@@ -55,6 +55,7 @@ function toNullableNumber(value: string): number | null {
 function createInitialState(supplier?: SupplierRecord | null): SupplierFormState {
   return {
     company_name: supplier?.company_name ?? "",
+    category: supplier?.category ?? "",
     tin: supplier?.tin ?? "",
     primary_contact_name: supplier?.primary_contact_name ?? "",
     primary_contact_phone: supplier?.primary_contact_phone ?? "",
@@ -93,6 +94,7 @@ export default function SupplierFormModal({
 
     onSubmit({
       company_name: form.company_name.trim(),
+      category: form.category.trim(),
       tin: form.tin.trim(),
       primary_contact_name: form.primary_contact_name.trim(),
       primary_contact_phone: form.primary_contact_phone.trim(),
@@ -134,6 +136,16 @@ export default function SupplierFormModal({
             </div>
 
             <div>
+              <label className="text-xs font-medium text-muted-foreground">Category</label>
+              <Input
+                value={form.category}
+                onChange={handleChange("category")}
+                placeholder="Packaging Materials"
+                className="mt-1"
+              />
+            </div>
+
+            <div>
               <label className="text-xs font-medium text-muted-foreground">TIN *</label>
               <Input
                 required
@@ -141,22 +153,6 @@ export default function SupplierFormModal({
                 onChange={handleChange("tin")}
                 className="mt-1"
               />
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">Status</label>
-              <Select value={form.status} onValueChange={(value) => setForm((current) => ({ ...current, status: value }))}>
-                <SelectTrigger className="mt-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {STATUS_OPTIONS.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
 
             <div>
@@ -274,25 +270,6 @@ export default function SupplierFormModal({
                 className="mt-1"
               />
             </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 rounded-lg border border-border bg-secondary/20 p-4 text-sm md:grid-cols-2">
-              <div>
-                <span className="text-xs font-medium text-muted-foreground">Created At</span>
-                <p className="mt-1 text-foreground">
-                  {supplier ? new Date(supplier.created_at).toLocaleString() : "Will be set on save"}
-                </p>
-              </div>
-              <div>
-                <span className="text-xs font-medium text-muted-foreground">Archived At</span>
-                <p className="mt-1 text-foreground">
-                  {supplier?.archived_at
-                    ? new Date(supplier.archived_at).toLocaleString()
-                    : form.status === "Archived"
-                      ? "Will be set on save"
-                      : "Not archived"}
-                </p>
-              </div>
             </div>
 
             <DialogFooter className="pt-2">
