@@ -43,6 +43,7 @@ interface SupplierFormState {
 }
 
 const STATUS_OPTIONS = ["Active", "Inactive", "Archived"];
+const DEFAULT_TENANT_ID = "tenant-stepping-stone";
 
 function toInputValue(value: number | null): string {
   return value == null ? "" : String(value);
@@ -94,6 +95,7 @@ export default function SupplierFormModal({
 
     onSubmit({
       company_name: form.company_name.trim(),
+      tenant_id: supplier?.tenant_id ?? DEFAULT_TENANT_ID,
       category: form.category.trim(),
       tin: form.tin.trim(),
       primary_contact_name: form.primary_contact_name.trim(),

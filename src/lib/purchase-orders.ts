@@ -2,6 +2,7 @@ import type { PurchaseOrder, PurchaseOrderLine, PurchaseOrderStatus, SupplierOpt
 
 export const CURRENT_USER = "Jean-Pierre Habimana";
 const STORAGE_KEY = "prointel.purchase-orders";
+const DEFAULT_TENANT_ID = "tenant-stepping-stone";
 
 export const SUPPLIER_OPTIONS: SupplierOption[] = [
   { id: "supplier-001", name: "Kigali Packaging Works" },
@@ -22,6 +23,7 @@ export const STATUS_FILTER_OPTIONS: Array<PurchaseOrderStatus | "All Statuses"> 
 const INITIAL_PURCHASE_ORDERS: PurchaseOrder[] = [
   {
     po_number: "PO-2026-001",
+    tenant_id: DEFAULT_TENANT_ID,
     supplier_id: "supplier-001",
     delivery_address: "Stepping Stone Main Factory, Kigali Special Economic Zone",
     required_delivery_date: "2026-05-06",
@@ -37,6 +39,7 @@ const INITIAL_PURCHASE_ORDERS: PurchaseOrder[] = [
     lines: [
       {
         purchase_order_id: "PO-2026-001",
+        tenant_id: DEFAULT_TENANT_ID,
         line_number: 1,
         raw_material_id: "RM-BROWN-KRAFT-PAPER-ROLLS",
         raw_material_name: "Brown Kraft Paper Rolls",
@@ -49,6 +52,7 @@ const INITIAL_PURCHASE_ORDERS: PurchaseOrder[] = [
       },
       {
         purchase_order_id: "PO-2026-001",
+        tenant_id: DEFAULT_TENANT_ID,
         line_number: 2,
         raw_material_id: "RM-INDUSTRIAL-BONDING-ADHESIVE",
         raw_material_name: "Industrial Bonding Adhesive",
@@ -63,6 +67,7 @@ const INITIAL_PURCHASE_ORDERS: PurchaseOrder[] = [
   },
   {
     po_number: "PO-2026-002",
+    tenant_id: DEFAULT_TENANT_ID,
     supplier_id: "supplier-002",
     delivery_address: "Warehouse B, Masoro Industrial Park",
     required_delivery_date: "2026-05-10",
@@ -78,6 +83,7 @@ const INITIAL_PURCHASE_ORDERS: PurchaseOrder[] = [
     lines: [
       {
         purchase_order_id: "PO-2026-002",
+        tenant_id: DEFAULT_TENANT_ID,
         line_number: 1,
         raw_material_id: "RM-RECYCLED-FIBER-PULP",
         raw_material_name: "Recycled Fiber Pulp",
@@ -92,6 +98,7 @@ const INITIAL_PURCHASE_ORDERS: PurchaseOrder[] = [
   },
   {
     po_number: "PO-2026-003",
+    tenant_id: DEFAULT_TENANT_ID,
     supplier_id: "supplier-004",
     delivery_address: "Stepping Stone Main Factory, Kigali Special Economic Zone",
     required_delivery_date: "2026-05-02",
@@ -107,6 +114,7 @@ const INITIAL_PURCHASE_ORDERS: PurchaseOrder[] = [
     lines: [
       {
         purchase_order_id: "PO-2026-003",
+        tenant_id: DEFAULT_TENANT_ID,
         line_number: 1,
         raw_material_id: "RM-INK-STABILIZER-CONCENTRATE",
         raw_material_name: "Ink Stabilizer Concentrate",
@@ -121,6 +129,7 @@ const INITIAL_PURCHASE_ORDERS: PurchaseOrder[] = [
   },
   {
     po_number: "PO-2026-004",
+    tenant_id: DEFAULT_TENANT_ID,
     supplier_id: "supplier-003",
     delivery_address: "Warehouse C, Gikondo Logistics Yard",
     required_delivery_date: "2026-04-28",
@@ -136,6 +145,7 @@ const INITIAL_PURCHASE_ORDERS: PurchaseOrder[] = [
     lines: [
       {
         purchase_order_id: "PO-2026-004",
+        tenant_id: DEFAULT_TENANT_ID,
         line_number: 1,
         raw_material_id: "RM-FOOD-GRADE-STARCH",
         raw_material_name: "Food-Grade Starch",
@@ -166,14 +176,17 @@ function fallbackMaterialName(value: string | undefined): string {
 function normalizePurchaseOrders(orders: PurchaseOrder[]): PurchaseOrder[] {
   return orders.map((order) => ({
     ...order,
+    tenant_id: order.tenant_id ?? DEFAULT_TENANT_ID,
     total_amount: calculateTotalAmount({
       lines: order.lines.map((line) => ({
         ...line,
+        tenant_id: line.tenant_id ?? DEFAULT_TENANT_ID,
         raw_material_name: line.raw_material_name || fallbackMaterialName(line.raw_material_id),
       })),
     }),
     lines: order.lines.map((line) => ({
       ...line,
+      tenant_id: line.tenant_id ?? DEFAULT_TENANT_ID,
       raw_material_name: line.raw_material_name || fallbackMaterialName(line.raw_material_id),
     })),
   }));
@@ -266,6 +279,7 @@ export function createUpdatedLines(poNumber: string, lines: PurchaseOrderLine[],
   return lines.map((line, index) => ({
     ...line,
     purchase_order_id: poNumber,
+    tenant_id: line.tenant_id ?? DEFAULT_TENANT_ID,
     line_number: index + 1,
     raw_material_id: generateMaterialId(line.raw_material_name, index + 1),
     created_at: line.created_at || now,

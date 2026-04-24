@@ -27,7 +27,7 @@ const CtaSection: React.FC = () => {
           </Link>
         </div>
 
-        <p className="text-blue-300/50 text-sm">Full access to all modules. No credit card required.</p>
+        <p className="text-blue-300/50 text-sm">Full access to all modules.</p>
       </div>
     </section>
   );

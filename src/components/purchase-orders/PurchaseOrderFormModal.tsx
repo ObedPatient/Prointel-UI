@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { generateMaterialId } from "@/lib/purchase-orders";
+const DEFAULT_TENANT_ID = "tenant-stepping-stone";
 
 interface PurchaseOrderFormModalProps {
   order?: PurchaseOrder | null;
@@ -147,6 +148,7 @@ export default function PurchaseOrderFormModal({
 
     const lines: PurchaseOrderLine[] = form.lines.map((line, index) => ({
       purchase_order_id: purchaseOrderId,
+      tenant_id: order?.tenant_id ?? DEFAULT_TENANT_ID,
       line_number: index + 1,
       raw_material_id: generateMaterialId(line.raw_material_name, index + 1),
       raw_material_name: line.raw_material_name.trim(),
@@ -160,6 +162,7 @@ export default function PurchaseOrderFormModal({
 
     onSubmit({
       po_number: purchaseOrderId,
+      tenant_id: order?.tenant_id ?? DEFAULT_TENANT_ID,
       supplier_id: form.supplier_id,
       delivery_address: form.delivery_address.trim(),
       required_delivery_date: form.required_delivery_date,

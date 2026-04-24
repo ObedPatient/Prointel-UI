@@ -17,8 +17,11 @@ import {
 } from "lucide-react";
 import Dashboard from "../pages/Dashboard";
 import CompanySettings from "../pages/CompanySettings";
+import BillOfMaterialsPage from "../pages/BillOfMaterials";
 import Landing from "../pages/Landing";
 import PlaceholderPage from "../pages/PlaceholderPage";
+import ProductionCardsPage from "../pages/ProductionCards";
+import ProductsPage from "../pages/Products";
 import PurchaseOrdersPage from "../pages/PurchaseOrders";
 import SuppliersPage from "../pages/Suppliers";
 
@@ -72,6 +75,12 @@ export const routeSections: RouteSection[] = [
     label: "INVENTORY",
     routes: [
       {
+        title: "Products",
+        path: "/products",
+        icon: ClipboardList,
+        element: <ProductsPage />,
+      },
+      {
         title: "Stock Cards",
         path: "/stock-cards",
         icon: ClipboardList,
@@ -92,7 +101,13 @@ export const routeSections: RouteSection[] = [
         title: "Production Cards",
         path: "/production-cards",
         icon: Cog,
-        element: placeholderRoute("Production Cards"),
+        element: <ProductionCardsPage />,
+      },
+      {
+        title: "Bill of Materials",
+        path: "/bill-of-materials",
+        icon: ClipboardList,
+        element: <BillOfMaterialsPage />,
       },
       {
         title: "Machine Logs",

@@ -2,9 +2,12 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import LandingFooter from "./components/landing/LandingFooter";
 import LandingNav from "./components/landing/LandingNav";
 import AppLayout from "./components/layout/AppLayout";
+import BillOfMaterialDetails from "./pages/BillOfMaterialDetails";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import PlaceholderPage from "./pages/PlaceholderPage";
+import ProductDetails from "./pages/ProductDetails";
+import ProductionCardDetails from "./pages/ProductionCardDetails";
 import PurchaseOrderDetails from "./pages/PurchaseOrderDetails";
 import SupplierDetails from "./pages/SupplierDetails";
 import TenantRegister from "./pages/TenantRegister";
@@ -38,6 +41,9 @@ export default function App() {
           {appRoutes.map((route) => (
             <Route key={route.path} path={route.path.slice(1)} element={route.element} />
           ))}
+          <Route path="bill-of-materials/:bomId" element={<BillOfMaterialDetails />} />
+          <Route path="products/:productId" element={<ProductDetails />} />
+          <Route path="production-cards/:cardId" element={<ProductionCardDetails />} />
           <Route path="purchase-orders/:poNumber" element={<PurchaseOrderDetails />} />
           <Route path="suppliers/:supplierId" element={<SupplierDetails />} />
         </Route>

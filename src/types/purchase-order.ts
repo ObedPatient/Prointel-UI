@@ -2,6 +2,7 @@ export type PurchaseOrderStatus = "Draft" | "Submitted" | "Approved" | "Rejected
 
 export interface PurchaseOrderLine {
   purchase_order_id: string;
+  tenant_id: string;
   line_number: number;
   raw_material_id: string;
   raw_material_name: string;
@@ -15,6 +16,7 @@ export interface PurchaseOrderLine {
 
 export interface PurchaseOrder {
   po_number: string;
+  tenant_id: string;
   supplier_id: string;
   delivery_address: string;
   required_delivery_date: string;

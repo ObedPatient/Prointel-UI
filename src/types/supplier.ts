@@ -1,5 +1,6 @@
 export interface Supplier {
   company_name: string;
+  tenant_id: string;
   category: string;
   tin: string;
   primary_contact_name: string;

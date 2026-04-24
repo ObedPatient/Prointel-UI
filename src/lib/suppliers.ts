@@ -1,10 +1,12 @@
 import type { Supplier, SupplierRecord } from "@/types/supplier";
 
 const STORAGE_KEY = "prointel.suppliers";
+const DEFAULT_TENANT_ID = "tenant-stepping-stone";
 
 export const INITIAL_SUPPLIERS: SupplierRecord[] = [
   {
     id: "supplier-001",
+    tenant_id: DEFAULT_TENANT_ID,
     company_name: "Kigali Packaging Works",
     category: "Packaging Materials",
     tin: "107845239",
@@ -24,6 +26,7 @@ export const INITIAL_SUPPLIERS: SupplierRecord[] = [
   },
   {
     id: "supplier-002",
+    tenant_id: DEFAULT_TENANT_ID,
     company_name: "Great Lakes Fiber Ltd",
     category: "Paper & Fiber",
     tin: "102334875",
@@ -43,6 +46,7 @@ export const INITIAL_SUPPLIERS: SupplierRecord[] = [
   },
   {
     id: "supplier-003",
+    tenant_id: DEFAULT_TENANT_ID,
     company_name: "Virunga Industrial Supplies",
     category: "Industrial Consumables",
     tin: "109992144",
@@ -65,6 +69,7 @@ export const INITIAL_SUPPLIERS: SupplierRecord[] = [
 function normalizeSupplierRecord(supplier: SupplierRecord): SupplierRecord {
   return {
     ...supplier,
+    tenant_id: supplier.tenant_id ?? DEFAULT_TENANT_ID,
     category: supplier.category ?? "",
   };
 }
