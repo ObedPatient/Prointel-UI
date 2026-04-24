@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { routeSections } from "../../routes/routes";
+import { routeSections } from "@/routes/app";
 
 interface SidebarProps {
   onCollapse?: (collapsed: boolean) => void;

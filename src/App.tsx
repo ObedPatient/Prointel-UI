@@ -2,16 +2,15 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import LandingFooter from "./components/landing/LandingFooter";
 import LandingNav from "./components/landing/LandingNav";
 import AppLayout from "./components/layout/AppLayout";
-import BillOfMaterialDetails from "./pages/BillOfMaterialDetails";
-import Landing from "./pages/Landing";
-import Login from "./pages/Login";
-import PlaceholderPage from "./pages/PlaceholderPage";
-import ProductDetails from "./pages/ProductDetails";
-import ProductionCardDetails from "./pages/ProductionCardDetails";
-import PurchaseOrderDetails from "./pages/PurchaseOrderDetails";
-import SupplierDetails from "./pages/SupplierDetails";
-import TenantRegister from "./pages/TenantRegister";
-import { appRoutes } from "./routes/routes";
+import BillOfMaterialDetailsPage from "./pages/bill-of-material/BillOfMaterialDetailsPage";
+import GoodReceiptNoteDetailsPage from "./pages/good-receipt-note/GoodReceiptNoteDetailsPage";
+import MaterialDetailsPage from "./pages/material/MaterialDetailsPage";
+import ProductDetailsPage from "./pages/product/ProductDetailsPage";
+import ProductionCardDetailsPage from "./pages/production-card/ProductionCardDetailsPage";
+import PurchaseOrderDetailsPage from "./pages/purchase-order/PurchaseOrderDetailsPage";
+import SupplierDetailsPage from "./pages/supplier/SupplierDetailsPage";
+import { appRoutes } from "./routes/app";
+import { publicRoutes } from "./routes/public";
 
 export default function App() {
   const publicShell = (content: React.ReactNode) => (
@@ -25,28 +24,27 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={publicShell(<Login />)} />
-        <Route path="/tenant-register" element={publicShell(<TenantRegister />)} />
-        <Route path="/about" element={<PlaceholderPage title="About" />} />
-        <Route path="/blog" element={<PlaceholderPage title="Blog" />} />
-        <Route path="/careers" element={<PlaceholderPage title="Careers" />} />
-        <Route path="/changelog" element={<PlaceholderPage title="Changelog" />} />
-        <Route path="/cookie-policy" element={<PlaceholderPage title="Cookie Policy" />} />
-        <Route path="/forgot-password" element={publicShell(<PlaceholderPage title="Forgot Password" />)} />
-        <Route path="/gdpr" element={<PlaceholderPage title="GDPR" />} />
-        <Route path="/privacy-policy" element={<PlaceholderPage title="Privacy Policy" />} />
-        <Route path="/terms-of-service" element={<PlaceholderPage title="Terms of Service" />} />
+        {publicRoutes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={route.layout === "public-shell" ? publicShell(route.element) : route.element}
+          />
+        ))}
+
         <Route element={<AppLayout />}>
           {appRoutes.map((route) => (
             <Route key={route.path} path={route.path.slice(1)} element={route.element} />
           ))}
-          <Route path="bill-of-materials/:bomId" element={<BillOfMaterialDetails />} />
-          <Route path="products/:productId" element={<ProductDetails />} />
-          <Route path="production-cards/:cardId" element={<ProductionCardDetails />} />
-          <Route path="purchase-orders/:poNumber" element={<PurchaseOrderDetails />} />
-          <Route path="suppliers/:supplierId" element={<SupplierDetails />} />
+          <Route path="bill-of-materials/:bomId" element={<BillOfMaterialDetailsPage />} />
+          <Route path="goods-received/:grnId" element={<GoodReceiptNoteDetailsPage />} />
+          <Route path="materials/:materialId" element={<MaterialDetailsPage />} />
+          <Route path="products/:productId" element={<ProductDetailsPage />} />
+          <Route path="production-cards/:cardId" element={<ProductionCardDetailsPage />} />
+          <Route path="purchase-orders/:poNumber" element={<PurchaseOrderDetailsPage />} />
+          <Route path="suppliers/:supplierId" element={<SupplierDetailsPage />} />
         </Route>
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

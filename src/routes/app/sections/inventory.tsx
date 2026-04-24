@@ -1,0 +1,36 @@
+import { ClipboardList, Package } from "lucide-react";
+import GoodsReceivedPage from "@/pages/good-receipt-note/GoodsReceivedPage";
+import MaterialsPage from "@/pages/material/MaterialsPage";
+import ProductsPage from "@/pages/product/ProductsPage";
+import { placeholderRoute } from "@/routes/shared/placeholder-route";
+import type { RouteSection } from "../types";
+
+export const inventoryRoutes: RouteSection = {
+  label: "INVENTORY",
+  routes: [
+    {
+      title: "Materials",
+      path: "/materials",
+      icon: Package,
+      element: <MaterialsPage />,
+    },
+    {
+      title: "Products",
+      path: "/products",
+      icon: ClipboardList,
+      element: <ProductsPage />,
+    },
+    {
+      title: "Stock Cards",
+      path: "/stock-cards",
+      icon: ClipboardList,
+      element: placeholderRoute("Stock Cards"),
+    },
+    {
+      title: "Goods Received",
+      path: "/goods-received",
+      icon: Package,
+      element: <GoodsReceivedPage />,
+    },
+  ],
+};

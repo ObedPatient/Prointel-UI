@@ -4,7 +4,7 @@ import type {
   BillOfMaterials,
   BillOfMaterialsStatus,
   RawMaterialOption,
-} from "@/types/bill-of-materials";
+} from "@/types/bill-of-material";
 
 export const CURRENT_BOM_USER = "Jean-Pierre Habimana";
 const STORAGE_KEY = "prointel.bill-of-materials";

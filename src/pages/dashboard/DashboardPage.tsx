@@ -6,11 +6,11 @@ import {
   Factory,
   ShoppingCart,
 } from "lucide-react";
-import CostCompositionChart from "../components/dashboard/CostCompositionChart";
-import KpiCard from "../components/dashboard/KpiCard";
-import MarginByClientChart from "../components/dashboard/MarginByClientChart";
-import ProductionOutputChart from "../components/dashboard/ProductionOutputChart";
-import WastageChart from "../components/dashboard/WastageChart";
+import CostCompositionChart from "@/components/dashboard/CostCompositionChart";
+import KpiCard from "@/components/dashboard/KpiCard";
+import MarginByClientChart from "@/components/dashboard/MarginByClientChart";
+import ProductionOutputChart from "@/components/dashboard/ProductionOutputChart";
+import WastageChart from "@/components/dashboard/WastageChart";
 
 export default function Dashboard() {
   return (

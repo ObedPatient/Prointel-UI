@@ -237,7 +237,7 @@ export default function Products() {
                 key={product.id}
                 className={index % 2 === 1 ? "bg-secondary/10 hover:bg-secondary/30" : "hover:bg-secondary/30"}
               >
-                <TableCell className="px-4 py-3 font-mono text-xs font-semibold text-primary">
+                <TableCell className="px-4 py-3 font-mono text-xs font-semibold">
                   {product.code}
                 </TableCell>
                 <TableCell className="px-4 py-3">

@@ -41,7 +41,7 @@ import {
   loadBillOfMaterials,
   saveBillOfMaterials,
 } from "@/lib/bill-of-materials";
-import type { BillOfMaterials, BillOfMaterialsStatus } from "@/types/bill-of-materials";
+import type { BillOfMaterials, BillOfMaterialsStatus } from "@/types/bill-of-material";
 
 const PAGE_SIZE = 8;
 

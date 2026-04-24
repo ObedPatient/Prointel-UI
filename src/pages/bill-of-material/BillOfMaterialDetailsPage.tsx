@@ -35,7 +35,7 @@ import type {
   BillOfMaterialLine,
   BillOfMaterials,
   BillOfMaterialsStatus,
-} from "@/types/bill-of-materials";
+} from "@/types/bill-of-material";
 
 const LINE_ITEMS_PAGE_SIZE = 5;
 

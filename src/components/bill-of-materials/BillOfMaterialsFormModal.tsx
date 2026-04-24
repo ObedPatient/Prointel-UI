@@ -26,7 +26,7 @@ import {
   generateNextBomCode,
   getRawMaterialOption,
 } from "@/lib/bill-of-materials";
-import type { BillOfMaterialLine, BillOfMaterials } from "@/types/bill-of-materials";
+import type { BillOfMaterialLine, BillOfMaterials } from "@/types/bill-of-material";
 
 interface BillOfMaterialsFormModalProps {
   bom?: BillOfMaterials | null;

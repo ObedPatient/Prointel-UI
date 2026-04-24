@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { BillOfMaterials } from "@/types/bill-of-materials";
+import type { BillOfMaterials } from "@/types/bill-of-material";
 
 interface BillOfMaterialsActionMenuProps {
   bom: BillOfMaterials;
