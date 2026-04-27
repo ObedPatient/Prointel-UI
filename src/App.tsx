@@ -3,11 +3,14 @@ import LandingFooter from "./components/landing/LandingFooter";
 import LandingNav from "./components/landing/LandingNav";
 import AppLayout from "./components/layout/AppLayout";
 import BillOfMaterialDetailsPage from "./pages/bill-of-material/BillOfMaterialDetailsPage";
+import CustomerDetailsPage from "./pages/customer/CustomerDetailsPage";
 import GoodReceiptNoteDetailsPage from "./pages/good-receipt-note/GoodReceiptNoteDetailsPage";
 import MaterialDetailsPage from "./pages/material/MaterialDetailsPage";
 import ProductDetailsPage from "./pages/product/ProductDetailsPage";
 import ProductionCardDetailsPage from "./pages/production-card/ProductionCardDetailsPage";
 import PurchaseOrderDetailsPage from "./pages/purchase-order/PurchaseOrderDetailsPage";
+import RequestForQuotationDetailsPage from "./pages/request-for-quotation/RequestForQuotationDetailsPage";
+import SalesOrderDetailsPage from "./pages/sales-order/SalesOrderDetailsPage";
 import SupplierDetailsPage from "./pages/supplier/SupplierDetailsPage";
 import { appRoutes } from "./routes/app";
 import { publicRoutes } from "./routes/public";
@@ -37,11 +40,17 @@ export default function App() {
             <Route key={route.path} path={route.path.slice(1)} element={route.element} />
           ))}
           <Route path="bill-of-materials/:bomId" element={<BillOfMaterialDetailsPage />} />
+          <Route path="customers/:customerId" element={<CustomerDetailsPage />} />
           <Route path="goods-received/:grnId" element={<GoodReceiptNoteDetailsPage />} />
           <Route path="materials/:materialId" element={<MaterialDetailsPage />} />
           <Route path="products/:productId" element={<ProductDetailsPage />} />
           <Route path="production-cards/:cardId" element={<ProductionCardDetailsPage />} />
           <Route path="purchase-orders/:poNumber" element={<PurchaseOrderDetailsPage />} />
+          <Route
+            path="request-for-quotations/:quotationNumber"
+            element={<RequestForQuotationDetailsPage />}
+          />
+          <Route path="sales-orders/:orderNumber" element={<SalesOrderDetailsPage />} />
           <Route path="suppliers/:supplierId" element={<SupplierDetailsPage />} />
         </Route>
 

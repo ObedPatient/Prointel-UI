@@ -2,7 +2,7 @@ import { ClipboardList, Package } from "lucide-react";
 import GoodsReceivedPage from "@/pages/good-receipt-note/GoodsReceivedPage";
 import MaterialsPage from "@/pages/material/MaterialsPage";
 import ProductsPage from "@/pages/product/ProductsPage";
-import { placeholderRoute } from "@/routes/shared/placeholder-route";
+import StockCardsPage from "@/pages/stock-card/StockCardsPage";
 import type { RouteSection } from "../types";
 
 export const inventoryRoutes: RouteSection = {
@@ -24,7 +24,7 @@ export const inventoryRoutes: RouteSection = {
       title: "Stock Cards",
       path: "/stock-cards",
       icon: ClipboardList,
-      element: placeholderRoute("Stock Cards"),
+      element: <StockCardsPage />,
     },
     {
       title: "Goods Received",

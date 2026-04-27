@@ -5,6 +5,7 @@ import type {
   ProductionCardStatus,
   SalesOrderOption,
 } from "@/types/production-card";
+import { listSalesOrderOptions } from "@/lib/sales-orders";
 
 const STORAGE_KEY = "prointel.production-cards";
 const DEFAULT_TENANT_ID = "tenant-stepping-stone";
@@ -231,6 +232,10 @@ export function listProductionCardSalesOrders(cards: ProductionCard[]): SalesOrd
   const options = new Map<string, SalesOrderOption>();
 
   BASE_SALES_ORDER_OPTIONS.forEach((option) => {
+    options.set(option.value, option);
+  });
+
+  listSalesOrderOptions().forEach((option) => {
     options.set(option.value, option);
   });
 

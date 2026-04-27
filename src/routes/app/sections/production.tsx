@@ -1,6 +1,7 @@
 import { AlertTriangle, ClipboardList, Cog, ScrollText } from "lucide-react";
 import BillOfMaterialsPage from "@/pages/bill-of-material/BillOfMaterialsPage";
 import ProductionCardsPage from "@/pages/production-card/ProductionCardsPage";
+import QualityControlPage from "@/pages/quality-control/QualityControlPage";
 import { placeholderRoute } from "@/routes/shared/placeholder-route";
 import type { RouteSection } from "../types";
 
@@ -29,7 +30,7 @@ export const productionRoutes: RouteSection = {
       title: "Quality Control",
       path: "/quality-control",
       icon: AlertTriangle,
-      element: placeholderRoute("Quality Control"),
+      element: <QualityControlPage />,
     },
   ],
 };
